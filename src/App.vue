@@ -1,19 +1,25 @@
 <template>
   <div class="container">
       <Header title="Task Tracker" />
-      <Tasks @delete-task="deleteTask" :tasks="tasks" />
+      <AddTask /> 
+      <Tasks 
+      @toggle-reminder="toggleReminder"
+      @delete-task="deleteTask" 
+      :tasks="tasks" />
   </div>
 </template>
 
 <script>
 import Header from './components/Header'
 import Tasks from './components/Tasks'
+import AddTask from './components/AddTask'
 
 export default {
   name: 'App',
   components: {
     Header,
-    Tasks
+    Tasks,
+    AddTask
   },
   // data should be a function
   data() {
@@ -25,10 +31,18 @@ export default {
   methods: {
     deleteTask(id) {
       if(confirm('Are you sure?')) {
+        //to filter exact tasks which are not same to given id
         this.tasks = this.tasks.filter((task) => task.id !== id)
       }
-
-    }
+    },
+    toggleReminder(id) {
+      // map a new array
+      this.tasks = this.tasks.map((task) => 
+      // if this.task.id is equal to passed id, bring initial properties 
+      // and change reminder to whatever opposite of ccurent reminder
+      task.id === id ? {...task, reminder: !task.reminder} : task 
+      ) 
+    },
   },
   created() {
     this.tasks = [
@@ -36,12 +50,6 @@ export default {
         id: 1,
         text: 'Doctors Appointment',
         day: 'March 1st at 2:30pm',
-        reminder: true,
-      },
-      {
-        id: 2,
-        text: 'Meeting at School',
-        day: 'March 3rd at 1:30pm',
         reminder: true,
       },
       {
@@ -78,6 +86,7 @@ export default {
   }
   body {
     font-family: 'Poppins', sans-serif;
+    
   }
   .container {
     max-width: 500px;
@@ -94,7 +103,6 @@ export default {
     color: #fff;
     border: none;
     padding: 10px 20px;
-    margin: 5px;
     border-radius: 5px;
     cursor: pointer;
     text-decoration: none;
