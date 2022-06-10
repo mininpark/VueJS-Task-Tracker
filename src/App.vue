@@ -1,8 +1,13 @@
 <template>
   <div class="container">
-      <Header title="Task Tracker" />
-      <AddTask /> 
-      <Tasks 
+      <Header 
+        title="Task Tracker" 
+        @toggle-add-task="toggleAddTask" 
+        :showAddTask="showAddTask"/>
+      <div v-show="showAddTask">
+        <AddTask @add-task="addTask"/> 
+      </div>
+      <Tasks
       @toggle-reminder="toggleReminder"
       @delete-task="deleteTask" 
       :tasks="tasks" />
@@ -25,16 +30,26 @@ export default {
   data() {
     return {
       //Life cycle method
-      tasks: []
+      tasks: [],
+      showAddTask: false
     }
   },
   methods: {
+    toggleAddTask() {
+      this.showAddTask = !this.showAddTask
+    },
+
+    addTask(task) {
+      this.tasks = [...this.tasks, task]
+    },
+
     deleteTask(id) {
       if(confirm('Are you sure?')) {
         //to filter exact tasks which are not same to given id
         this.tasks = this.tasks.filter((task) => task.id !== id)
       }
     },
+
     toggleReminder(id) {
       // map a new array
       this.tasks = this.tasks.map((task) => 
