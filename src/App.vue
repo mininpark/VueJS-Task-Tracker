@@ -4,33 +4,25 @@
         title="Task Tracker" 
         @toggle-add-task="toggleAddTask" 
         :showAddTask="showAddTask"/>
-      <div v-show="showAddTask">
-        <AddTask @add-task="addTask"/> 
-      </div>
-      <Tasks
-      @toggle-reminder="toggleReminder"
-      @delete-task="deleteTask" 
-      :tasks="tasks" />
+
+      <router-view></router-view>
+      <Footer />
   </div>
 </template>
 
 <script>
 import Header from './components/Header'
-import Tasks from './components/Tasks'
-import AddTask from './components/AddTask'
+import Footer from './components/Footer'
 
 export default {
   name: 'App',
   components: {
     Header,
-    Tasks,
-    AddTask
+    Footer
   },
   // data should be a function
   data() {
     return {
-      //Life cycle method
-      tasks: [],
       showAddTask: false
     }
   },
@@ -38,56 +30,7 @@ export default {
     toggleAddTask() {
       this.showAddTask = !this.showAddTask
     },
-
-    addTask(task) {
-      this.tasks = [...this.tasks, task]
-    },
-
-    deleteTask(id) {
-      if(confirm('Are you sure?')) {
-        //to filter exact tasks which are not same to given id
-        this.tasks = this.tasks.filter((task) => task.id !== id)
-      }
-    },
-
-    toggleReminder(id) {
-      // map a new array
-      this.tasks = this.tasks.map((task) => 
-      // if this.task.id is equal to passed id, bring initial properties 
-      // and change reminder to whatever opposite of ccurent reminder
-      task.id === id ? {...task, reminder: !task.reminder} : task 
-      ) 
-    },
   },
-  created() {
-    this.tasks = [
-      {
-        id: 1,
-        text: 'Doctors Appointment',
-        day: 'March 1st at 2:30pm',
-        reminder: true,
-      },
-      {
-        id: 2,
-        text: 'Meeting at School',
-        day: 'March 3rd at 1:30pm',
-        reminder: true,
-      },
-      {
-        id: 3,
-        text: 'Gym',
-        day: 'March 4th at 12:30pm',
-        reminder: false,
-      },
-      {
-        id: 4,
-        text: 'Meeting at School',
-        day: 'March 6th at 14:00pm',
-        reminder: true,
-      }
-
-    ]
-  }
 }
 </script>
 
