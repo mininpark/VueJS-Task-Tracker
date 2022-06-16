@@ -1,26 +1,31 @@
 <template>
-  <div v-show="showAddTask">
-    <AddTask @add-task="addTask"/> 
-  </div>
+  <AddTask 
+  v-show="showAddTask" 
+  @add-task="addTask" />
   <Tasks
     @toggle-reminder="toggleReminder"
-    @delete-task="deleteTask" 
-    :tasks="tasks" 
+    @delete-task="deleteTask"
+    :tasks="tasks"
   />
 </template>
 
 <script>
-import Tasks from './components/Tasks'
-import AddTask from './components/AddTask'
+import Tasks from '../components/Tasks'
+import AddTask from '../components/AddTask'
 
 export default {
   name: 'Home',
+  props: {
+    showAddTasks: Boolean,
+  },
   components: {
     Tasks,
     AddTask,
   },
-  data: {
-    tasks: [],
+  data() {
+    return {
+      tasks: [],
+    }
   },
   methods: {
 
@@ -45,7 +50,9 @@ export default {
         })
 
         //to filter exact tasks which are not same to given id
-        res.status === 200 ? (this.tasks = this.tasks.filter((task) => task.id !== id)) : alert('Error deleting task')
+        res.status === 200 
+        ? (this.tasks = this.tasks.filter((task) => task.id !== id)) 
+        : alert('Error deleting task')
       }
     },
 
@@ -79,7 +86,9 @@ export default {
       return data
     }
   },
-
+    async created() {
+    this.tasks = await this.fetchTasks()
+  },
   
 }
 </script>
